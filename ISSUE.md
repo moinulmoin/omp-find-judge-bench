@@ -61,3 +61,5 @@ Define the model on the OpenAI-compatible endpoint (`api: openai-completions`, `
 ### Related
 - #14320 / #14325: judge forces `disableReasoning` (by design).
 - #14970: Retry-After capping. Separately, z.ai returned 4–7 burst `429`s (`code 1302`, "Rate limit reached for requests") per find run when 16 requests were in flight.
+
+Filed upstream: https://github.com/can1357/oh-my-pi/issues/15114
