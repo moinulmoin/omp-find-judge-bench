@@ -1,0 +1,35 @@
+{
+  "captured_with": "PI_REQ_DEBUG=1 (first judge request body per run)",
+  "requests": [
+    {
+      "judge_role": "zai/glm-5.3-flash:low",
+      "endpoint": "https://api.z.ai/api/anthropic/v1/messages",
+      "sent": "thinking: {type: \"disabled\"}",
+      "effect": "GLM 5.3 can't disable thinking \u2192 server runs default max"
+    },
+    {
+      "judge_role": "zai-oai/glm-5.3-flash:low",
+      "endpoint": "https://api.z.ai/api/coding/paas/v4/chat/completions",
+      "sent": "thinking: enabled \u00b7 reasoning_effort: \"low\"",
+      "effect": "honored"
+    },
+    {
+      "judge_role": "zai-oai/glm-5.3-flash:max",
+      "endpoint": "https://api.z.ai/api/coding/paas/v4/chat/completions",
+      "sent": "thinking: enabled \u00b7 reasoning_effort: \"low\"",
+      "effect": "suffix ignored \u2192 forced lowest"
+    },
+    {
+      "judge_role": "openai-codex/gpt-6-luna:high + tier.openai: priority",
+      "endpoint": "https://chatgpt.com/backend-api/codex/responses",
+      "sent": "(no reasoning, no service_tier)",
+      "effect": "fast mode never sent"
+    },
+    {
+      "judge_role": "anthropic/claude-haiku-5-5:medium",
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "sent": "thinking: {type: \"disabled\"}",
+      "effect": "suffix ignored"
+    }
+  ]
+}

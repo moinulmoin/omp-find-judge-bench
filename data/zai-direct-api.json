@@ -1,0 +1,64 @@
+{
+  "prompt": "one-line 4-option filename classification",
+  "max_tokens": 4096,
+  "temperature": 0,
+  "results": [
+    {
+      "endpoint": "anthropic /v1/messages",
+      "extra_body": {},
+      "seconds": 6.3,
+      "output_tokens": 234,
+      "reasoning_chars": 770
+    },
+    {
+      "endpoint": "anthropic /v1/messages",
+      "extra_body": {
+        "reasoning_effort": "low"
+      },
+      "seconds": 5.7,
+      "output_tokens": 199,
+      "reasoning_chars": 689
+    },
+    {
+      "endpoint": "anthropic /v1/messages",
+      "extra_body": {
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.8,
+      "output_tokens": 41,
+      "reasoning_chars": 1
+    },
+    {
+      "endpoint": "anthropic /v1/messages",
+      "extra_body": {
+        "thinking": {
+          "type": "enabled"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 1.6,
+      "output_tokens": 3,
+      "reasoning_chars": 0
+    },
+    {
+      "endpoint": "openai /chat/completions",
+      "extra_body": {},
+      "seconds": 3.7,
+      "output_tokens": 105,
+      "reasoning_chars": 483
+    },
+    {
+      "endpoint": "openai /chat/completions",
+      "extra_body": {
+        "reasoning_effort": "low"
+      },
+      "seconds": 1.8,
+      "output_tokens": 10,
+      "reasoning_chars": 27
+    }
+  ]
+}

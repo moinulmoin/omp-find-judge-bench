@@ -1,0 +1,216 @@
+{
+  "judge": "zai-oai/glm-5.3-flash:low",
+  "find_elapsed_ms": 34489,
+  "requests": [
+    {
+      "seq": 1,
+      "status": "200 OK",
+      "seconds": 18.1,
+      "prompt_tokens": 6545,
+      "completion_tokens": 1237,
+      "reasoning_tokens": 857,
+      "tokens_per_s": 68.2
+    },
+    {
+      "seq": 2,
+      "status": "200 OK",
+      "seconds": 14.1,
+      "prompt_tokens": 6588,
+      "completion_tokens": 946,
+      "reasoning_tokens": 566,
+      "tokens_per_s": 66.9
+    },
+    {
+      "seq": 3,
+      "status": "200 OK",
+      "seconds": 8.4,
+      "prompt_tokens": 6858,
+      "completion_tokens": 405,
+      "reasoning_tokens": 174,
+      "tokens_per_s": 48.2
+    },
+    {
+      "seq": 4,
+      "status": "200 OK",
+      "seconds": 8.7,
+      "prompt_tokens": 6822,
+      "completion_tokens": 439,
+      "reasoning_tokens": 208,
+      "tokens_per_s": 50.3
+    },
+    {
+      "seq": 5,
+      "status": "200 OK",
+      "seconds": 9.0,
+      "prompt_tokens": 6990,
+      "completion_tokens": 451,
+      "reasoning_tokens": 220,
+      "tokens_per_s": 49.9
+    },
+    {
+      "seq": 6,
+      "status": "200 OK",
+      "seconds": 2.8,
+      "prompt_tokens": 1505,
+      "completion_tokens": 69,
+      "reasoning_tokens": 23,
+      "tokens_per_s": 24.6
+    },
+    {
+      "seq": 7,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 8,
+      "status": "200 OK",
+      "seconds": 1.8,
+      "prompt_tokens": 1962,
+      "completion_tokens": 11,
+      "reasoning_tokens": 8,
+      "tokens_per_s": 6.2
+    },
+    {
+      "seq": 9,
+      "status": "200 OK",
+      "seconds": 3.7,
+      "prompt_tokens": 6795,
+      "completion_tokens": 81,
+      "reasoning_tokens": 65,
+      "tokens_per_s": 22.0
+    },
+    {
+      "seq": 10,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 11,
+      "status": "200 OK",
+      "seconds": 4.0,
+      "prompt_tokens": 6373,
+      "completion_tokens": 87,
+      "reasoning_tokens": 71,
+      "tokens_per_s": 21.9
+    },
+    {
+      "seq": 12,
+      "status": "200 OK",
+      "seconds": 2.2,
+      "prompt_tokens": 3354,
+      "completion_tokens": 23,
+      "reasoning_tokens": 12,
+      "tokens_per_s": 10.6
+    },
+    {
+      "seq": 13,
+      "status": "200 OK",
+      "seconds": 5.1,
+      "prompt_tokens": 7140,
+      "completion_tokens": 126,
+      "reasoning_tokens": 110,
+      "tokens_per_s": 24.7
+    },
+    {
+      "seq": 14,
+      "status": "200 OK",
+      "seconds": 4.2,
+      "prompt_tokens": 5178,
+      "completion_tokens": 101,
+      "reasoning_tokens": 90,
+      "tokens_per_s": 24.1
+    },
+    {
+      "seq": 15,
+      "status": "200 OK",
+      "seconds": 3.3,
+      "prompt_tokens": 7024,
+      "completion_tokens": 51,
+      "reasoning_tokens": 35,
+      "tokens_per_s": 15.5
+    },
+    {
+      "seq": 16,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 17,
+      "status": "200 OK",
+      "seconds": 2.9,
+      "prompt_tokens": 4459,
+      "completion_tokens": 36,
+      "reasoning_tokens": 25,
+      "tokens_per_s": 12.2
+    },
+    {
+      "seq": 18,
+      "status": "200 OK",
+      "seconds": 2.2,
+      "prompt_tokens": 7705,
+      "completion_tokens": 16,
+      "reasoning_tokens": 0,
+      "tokens_per_s": 7.4
+    },
+    {
+      "seq": 19,
+      "status": "200 OK",
+      "seconds": 2.4,
+      "prompt_tokens": 4657,
+      "completion_tokens": 29,
+      "reasoning_tokens": 18,
+      "tokens_per_s": 12.3
+    },
+    {
+      "seq": 20,
+      "status": "200 OK",
+      "seconds": 7.2,
+      "prompt_tokens": 4366,
+      "completion_tokens": 219,
+      "reasoning_tokens": 208,
+      "tokens_per_s": 30.6
+    },
+    {
+      "seq": 21,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 22,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 23,
+      "status": "429 Too Many Requests",
+      "body": "{\"error\":{\"code\":\"1302\",\"message\":\"Rate limit reached for requests\"}}"
+    },
+    {
+      "seq": 24,
+      "status": "200 OK",
+      "seconds": 2.0,
+      "prompt_tokens": 6729,
+      "completion_tokens": 16,
+      "reasoning_tokens": 0,
+      "tokens_per_s": 8.1
+    },
+    {
+      "seq": 25,
+      "status": "200 OK",
+      "seconds": 1.9,
+      "prompt_tokens": 7808,
+      "completion_tokens": 16,
+      "reasoning_tokens": 0,
+      "tokens_per_s": 8.5
+    },
+    {
+      "seq": 26,
+      "status": "200 OK",
+      "seconds": 1.8,
+      "prompt_tokens": 6178,
+      "completion_tokens": 16,
+      "reasoning_tokens": 0,
+      "tokens_per_s": 8.8
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# Add under `providers:` in ~/.omp/agent/models.yml.
+# GLM-5.3-Flash on z.ai's OpenAI-compatible coding endpoint, where omp's
+# reasoning-off request becomes `reasoning_effort: "low"` (honored).
+# On the Anthropic-compatible endpoint (api.z.ai/api/anthropic) omp sends
+# `thinking: {type: disabled}`, which GLM-5.3 ignores and runs at max effort.
+zai-oai:
+  baseUrl: https://api.z.ai/api/coding/paas/v4
+  api: openai-completions
+  apiKey: ZAI_API_KEY
+  models:
+    - id: glm-5.3-flash
+      name: GLM-5.3-Flash (OpenAI endpoint)
+      reasoning: true
+      input: [text, image]
+      cost: { input: 0.15, output: 0.5, cacheRead: 0.03, cacheWrite: 0 }
+      contextWindow: 1000000
+      maxTokens: 131072
+      thinking:
+        mode: effort
+        efforts: [low, high, max]

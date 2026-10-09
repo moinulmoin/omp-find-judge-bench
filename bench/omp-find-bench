@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""Interactive benchmark for `omp find` across judge models.
+
+Pick models (fzf, multi-select), a query, and a dir. Each run swaps the
+`judge` role via a temp PI_CONFIG_FILES overlay (no fallbacks, so a failing
+model shows as errors instead of silently using another one) and records
+wall time, requests, errors, tokens, cost, and hits.
+Results append to ~/.omp/find-bench.jsonl.
+
+Thinking suffixes and fast mode are not offered: the find judge sends
+requests with reasoning disabled and no service tier (omp 18.8.7).
+
+The judgment cache (~/.omp/cache/judgment-cache.db*) is moved aside for the
+whole benchmark and cleared before every run, then restored, so repeat runs
+measure real model calls instead of cache hits.
+"""
+import glob
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+LOG = Path.home() / ".omp" / "find-bench.jsonl"
+CACHE = Path.home() / ".omp" / "cache"
+
+
+def clear_cache():
+    for p in glob.glob(str(CACHE / "judgment-cache.db*")):
+        os.unlink(p)
+
+
+def fzf(items, prompt):
+    r = subprocess.run(
+        ["fzf", "--multi", "--prompt", prompt, "--height", "60%", "--reverse",
+         "--header", "TAB select multiple, ENTER confirm"],
+        input="\n".join(items), capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        sys.exit("cancelled")
+    return [l.split("\t")[0] for l in r.stdout.splitlines() if l]
+
+
+def ask(prompt, default=""):
+    v = input(f"{prompt}{f' [{default}]' if default else ''}: ").strip()
+    return v or default
+
+
+def list_models():
+    seen, out = set(), []
+    for kind in ("judge", "chat"):
+        r = subprocess.run(["omp", "models", "--json", "--kind", kind], capture_output=True, text=True)
+        if r.returncode != 0:
+            sys.exit(f"omp models failed: {r.stderr.strip()}")
+        for m in json.loads(r.stdout)["models"]:
+            if m["selector"] not in seen:
+                seen.add(m["selector"])
+                out.append(f"{m['selector']}\t[{kind}]")
+    return out
+
+
+def run(selector, query, root, keywords):
+    with tempfile.NamedTemporaryFile("w", suffix=".yml", delete=False) as f:
+        f.write(f"modelRoles:\n  judge: {selector}\nretry:\n  fallbackChains:\n    judge: []\n")
+        cfg = f.name
+    cmd = ["omp", "find", query, root, "--json", "-q"]
+    for k in keywords:
+        cmd += ["-k", k]
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=root,
+                       env={**os.environ, "PI_CONFIG_FILES": cfg})
+    os.unlink(cfg)
+    try:
+        d = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        return {"model": selector, "error": (r.stderr or r.stdout).strip()[:300]}
+    s = d["stats"]
+    return {
+        "model": selector, "query": query, "root": root,
+        "ms": round(d["elapsedMs"]), "apiMs": round(s["apiMs"]),
+        "requests": s["requests"], "errors": s["errors"],
+        "inTok": s["inputTokens"], "outTok": s["outputTokens"], "cost": s["cost"],
+        "hits": [{"file": h["rel"], "score": round(h["contentScore"], 2),
+                  "ranges": [f"{x['start']}-{x['end']}" for x in h["ranges"][:3]]}
+                 for h in d["hits"]],
+        "failures": s["failures"],
+    }
+
+
+def table(rows):
+    hdr = ["model", "ms", "api ms", "req", "err", "in tok", "out tok", "cost $", "hits", "top hit"]
+    data = []
+    for r in rows:
+        if "error" in r:
+            data.append([r["model"], "ERROR", "", "", "", "", "", "", "", r["error"][:70]])
+            continue
+        top = f"{r['hits'][0]['file']} ({r['hits'][0]['score']})" if r["hits"] else "-"
+        if r["failures"]:
+            top += f"  ! {r['failures'][0][:50]}"
+        data.append([r["model"], str(r["ms"]), str(r["apiMs"]), str(r["requests"]), str(r["errors"]),
+                     str(r["inTok"]), str(r["outTok"]), f"{r['cost']:.4f}", str(len(r["hits"])), top])
+    w = [max(len(h), *(len(row[i]) for row in data)) for i, h in enumerate(hdr)]
+    fmt = "  ".join("{:<%d}" % x for x in w)
+    print("\n" + fmt.format(*hdr))
+    print("  ".join("-" * x for x in w))
+    for row in data:
+        print(fmt.format(*row))
+
+
+def main():
+    picks = fzf(list_models(), "judge model(s)> ")
+    query = ask("find query")
+    if not query:
+        sys.exit("query required")
+    root = os.path.abspath(os.path.expanduser(ask("repo/dir", os.getcwd())))
+    if not os.path.isdir(root):
+        sys.exit(f"not a directory: {root}")
+    kw = [k.strip() for k in ask("extra keywords (comma, optional)").split(",") if k.strip()]
+    reps = int(ask("repeats per model", "1"))
+
+    rows = []
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    stash = Path(tempfile.mkdtemp(prefix="omp-judge-cache-"))
+    for p in glob.glob(str(CACHE / "judgment-cache.db*")):
+        shutil.move(p, stash / Path(p).name)
+    try:
+        for i in range(reps):  # interleave rounds so drift spreads across models
+            for sel in picks:
+                print(f"running {sel} #{i + 1}...", flush=True)
+                clear_cache()
+                r = run(sel, query, root, kw)
+                rows.append(r)
+                with LOG.open("a") as f:
+                    f.write(json.dumps(r) + "\n")
+    finally:
+        clear_cache()
+        for p in stash.iterdir():
+            shutil.move(str(p), CACHE / p.name)
+        stash.rmdir()
+    table(rows)
+    print(f"\nfull hits/ranges/failures: {LOG}")
+
+
+if __name__ == "__main__":
+    main()
